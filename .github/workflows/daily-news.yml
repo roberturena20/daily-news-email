@@ -1,16 +1,13 @@
-name: Daily News Email
+name: Meeting Reminder
 
 on:
   schedule:
-    - cron: '0 6 * * *'
+    - cron: '50 14 * * *'
   workflow_dispatch:
 
 jobs:
-  send-email:
+  send-reminder:
     runs-on: ubuntu-latest
-    env:
-      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-    
     steps:
       - uses: actions/checkout@v4
       
@@ -19,15 +16,11 @@ jobs:
           python-version: '3.12'
       
       - name: Install dependencies
-        run: pip install anthropic requests python-dotenv
+        run: pip install python-dotenv
       
-      - name: Debug - List files
-        run: ls -la
-      
-      - name: Run news briefing
+      - name: Send meeting reminder
         env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           SENDER_EMAIL: ${{ secrets.SENDER_EMAIL }}
           SENDER_PASSWORD: ${{ secrets.SENDER_PASSWORD }}
           RECIPIENT_EMAIL: ${{ secrets.RECIPIENT_EMAIL }}
-        run: python daily_news_google.py
+        run: python meeting-reminder.py
